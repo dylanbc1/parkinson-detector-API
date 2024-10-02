@@ -1,11 +1,12 @@
+/* DESCOMENTAR
 package com.example.pdsbackend.controller;
 
+import com.example.pdsbackend.DTO.UserDTO;
 import com.example.pdsbackend.config.JwtTokenUtil;
 import com.example.pdsbackend.model.JwtRequest;
 import com.example.pdsbackend.model.JwtResponse;
-import com.example.pdsbackend.model.User;
-import com.example.pdsbackend.repository.IUserRepository;
-import com.example.pdsbackend.service.JwtUserDetailsService;
+import com.example.pdsbackend.service.IUserService;
+//DESCOMENTAR import com.example.pdsbackend.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,16 +14,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -33,27 +30,23 @@ public class AuthController {
     private JwtUserDetailsService userDetailsService;
 
     @Autowired
-    private IUserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private IUserService userService;
 
     // cuerpo de la solicitud como un objeto JSON
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public String register(@RequestBody UserDTO user) {
         try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));  // Encriptar la contraseña
-            user.setCreatedAt(LocalDateTime.now());
-            userRepository.save(user);
+            userService.createUser(user);
 
-            return "Usuario registrado con éxito";
+            return "User successfully registered";
         } catch (Exception e) {
-            return "Error al registrar el usuario";
+            return "User could not be registered";
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        System.out.println("Using JWT Secret: " + jwtTokenUtil.getSecret());
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -74,4 +67,4 @@ public class AuthController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-}
+}*/
